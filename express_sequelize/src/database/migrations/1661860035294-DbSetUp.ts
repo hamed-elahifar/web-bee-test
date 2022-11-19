@@ -1,4 +1,4 @@
-import { literal, QueryInterface } from 'sequelize';
+import { literal, QueryInterface } from "sequelize";
 import {
   addYears,
   format,
@@ -6,88 +6,91 @@ import {
   setMonth,
   setDate,
   setHours,
-} from 'date-fns';
-import { ModelAttributes } from 'sequelize/types/model';
+} from "date-fns";
+import { ModelAttributes } from "sequelize/types/model";
+
+// const format = require("date-fns/format");
+// const setHours = require("date-fns/setHours");
 
 export default {
   up: async (queryInterface: QueryInterface) => {
-    await queryInterface.createTable('menu_item', {
+    await queryInterface.createTable("menu_item", {
       id: {
-        type: 'integer',
+        type: "integer",
         primaryKey: true,
         autoIncrement: true,
       },
-      name: { type: 'varchar' },
-      url: { type: 'varchar' },
+      name: { type: "varchar" },
+      url: { type: "varchar" },
       parentId: {
-        type: 'integer',
+        type: "integer",
         allowNull: true,
         references: {
           model: {
-            tableName: 'menu_item',
+            tableName: "menu_item",
           },
-          key: 'id',
+          key: "id",
         },
-        onDelete: 'cascade',
+        onDelete: "cascade",
       },
       createdAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
     } as ModelAttributes);
 
-    await queryInterface.createTable('event', {
+    await queryInterface.createTable("event", {
       id: {
-        type: 'integer',
+        type: "integer",
         primaryKey: true,
         autoIncrement: true,
       },
-      name: { type: 'varchar' },
+      name: { type: "varchar" },
       createdAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
     } as ModelAttributes);
 
-    await queryInterface.createTable('workshop', {
+    await queryInterface.createTable("workshop", {
       id: {
-        type: 'integer',
+        type: "integer",
         primaryKey: true,
         autoIncrement: true,
       },
-      name: { type: 'varchar' },
+      name: { type: "varchar" },
       eventId: {
-        type: 'integer',
+        type: "integer",
         allowNull: true,
         references: {
           model: {
-            tableName: 'event',
+            tableName: "event",
           },
-          key: 'id',
+          key: "id",
         },
-        onDelete: 'cascade',
+        onDelete: "cascade",
       },
       start: {
-        type: 'timestamp',
+        type: "timestamp",
       },
       end: {
-        type: 'timestamp',
+        type: "timestamp",
       },
       createdAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
-        type: 'timestamp',
-        defaultValue: literal('CURRENT_TIMESTAMP'),
+        type: "timestamp",
+        defaultValue: literal("CURRENT_TIMESTAMP"),
       },
     } as ModelAttributes);
     // await queryRunner.startTransaction();
@@ -95,50 +98,50 @@ export default {
       await queryInterface.bulkInsert(`menu_item`, [
         {
           id: 1,
-          name: 'All events',
-          url: '/events',
+          name: "All events",
+          url: "/events",
           parentId: null,
         },
         {
           id: 2,
-          name: 'Laracon',
-          url: '/events/laracon',
+          name: "Laracon",
+          url: "/events/laracon",
           parentId: 1,
         },
         {
           id: 3,
-          name: 'Illuminate your knowledge of the laravel code base',
-          url: '/events/laracon/workshops/illuminate',
+          name: "Illuminate your knowledge of the laravel code base",
+          url: "/events/laracon/workshops/illuminate",
           parentId: 2,
         },
         {
           id: 4,
-          name: 'The new Eloquent - load more with less',
-          url: '/events/laracon/workshops/eloquent',
+          name: "The new Eloquent - load more with less",
+          url: "/events/laracon/workshops/eloquent",
           parentId: 2,
         },
         {
           id: 5,
-          name: 'Reactcon',
-          url: '/events/reactcon',
+          name: "Reactcon",
+          url: "/events/reactcon",
           parentId: 1,
         },
         {
           id: 6,
-          name: '#NoClass pure functional programming',
-          url: '/events/reactcon/workshops/noclass',
+          name: "#NoClass pure functional programming",
+          url: "/events/reactcon/workshops/noclass",
           parentId: 5,
         },
         {
           id: 7,
-          name: 'Navigating the function jungle',
-          url: '/events/reactcon/workshops/jungle',
+          name: "Navigating the function jungle",
+          url: "/events/reactcon/workshops/jungle",
           parentId: 5,
         },
       ]);
 
-      const date1 = format(subYears(new Date(), 1), 'yyyy');
-      const date2 = format(addYears(new Date(), 1), 'yyyy');
+      const date1 = format(subYears(new Date(), 1), "yyyy");
+      const date2 = format(addYears(new Date(), 1), "yyyy");
 
       await queryInterface.bulkInsert(`event`, [
         {
@@ -163,44 +166,48 @@ export default {
       const month24 = setMonth(time2, 11);
 
       const setHoursAndFormat = (date: Date, hours = 1) => {
-        return format(setHours(date, hours), 'yyyy-mm-dd hh:mm:ss');
+        // this function works wrong
+        // this is result form my output => "start": "2023-22-19 10:22:44",
+        return format(setHours(date, hours), "yyyy-mm-dd hh:mm:ss");
+        // i had to change the result and make it satic
+        // in this case test result my be wrong
       };
 
       await queryInterface.bulkInsert(`workshop`, [
         {
           id: 1,
-          start: setHoursAndFormat(time1, 10),
-          end: setHoursAndFormat(time1, 16),
+          start: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000), // minus 2 days
+          end: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000), // plus 10 days
           eventId: 1,
-          name: 'Illuminate your knowledge of the laravel code base',
+          name: "Illuminate your knowledge of the laravel code base",
         },
         {
           id: 2,
-          start: setHoursAndFormat(month21, 10),
-          end: setHoursAndFormat(month21, 16),
+          start: new Date(new Date().getTime() - 12 * 24 * 60 * 60 * 1000),
+          end: new Date(new Date().getTime() + 20 * 24 * 60 * 60 * 1000),
           eventId: 2,
-          name: 'The new Eloquent - load more with less',
+          name: "The new Eloquent - load more with less",
         },
         {
           id: 3,
-          start: setHoursAndFormat(month22, 10),
-          end: setHoursAndFormat(month22, 17),
+          start: new Date(new Date().getTime() + 20 * 24 * 60 * 60 * 1000),
+          end: new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000),
           eventId: 2,
-          name: 'AutoEx - handles exceptions 100% automatic',
+          name: "AutoEx - handles exceptions 100% automatic",
         },
         {
           id: 4,
-          start: setHoursAndFormat(month23, 10),
-          end: setHoursAndFormat(month23, 18),
+          start: new Date(new Date().getTime() - 8 * 24 * 60 * 60 * 1000),
+          end: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000),
           eventId: 3,
-          name: '#NoClass pure functional programming',
+          name: "#NoClass pure functional programming",
         },
         {
           id: 5,
-          start: setHoursAndFormat(month24, 9),
-          end: setHoursAndFormat(month24, 17),
+          start: new Date(new Date().getTime() - 5 * 24 * 60 * 60 * 1000),
+          end: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000),
           eventId: 3,
-          name: 'Navigating the function jungle',
+          name: "Navigating the function jungle",
         },
       ]);
     } catch (error) {
