@@ -3,10 +3,11 @@ import {
   Column,
   Model,
   AutoIncrement,
-  PrimaryKey
-} from 'sequelize-typescript';
-import { ModelAttributeColumnOptions } from 'sequelize';
-
+  PrimaryKey,
+  ForeignKey,
+} from "sequelize-typescript";
+import { ModelAttributeColumnOptions } from "sequelize";
+import Event from "./event.entity";
 
 @Table({
   updatedAt: false,
@@ -17,14 +18,15 @@ export default class Workshop extends Model {
   @Column
   declare id: number;
 
-  @Column({ type: 'datetime' } as ModelAttributeColumnOptions)
+  @Column({ type: "datetime" } as ModelAttributeColumnOptions)
   start: string;
 
-  @Column({ type: 'datetime' } as ModelAttributeColumnOptions)
+  @Column({ type: "datetime" } as ModelAttributeColumnOptions)
   end: string;
 
+  @ForeignKey(() => Event)
   @Column({
-    type: 'integer',
+    type: "integer",
     defaultValue: null,
   } as ModelAttributeColumnOptions)
   eventId: number;
@@ -32,6 +34,6 @@ export default class Workshop extends Model {
   @Column
   name: string;
 
-  @Column({ type: 'datetime' } as ModelAttributeColumnOptions)
+  @Column({ type: "datetime" } as ModelAttributeColumnOptions)
   declare createdAt: string;
 }

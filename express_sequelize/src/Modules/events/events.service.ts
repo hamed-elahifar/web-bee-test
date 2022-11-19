@@ -1,8 +1,7 @@
-import Event from './entities/event.entity';
-
+import Event from "./entities/event.entity";
+import Workshop from "./entities/workshop.entity";
 
 export class EventsService {
-
   async getWarmupEvents() {
     return await Event.findAll();
   }
@@ -85,7 +84,7 @@ export class EventsService {
      */
 
   async getEventsWithWorkshops() {
-    throw new Error('TODO task 1');
+    return Event.findAll({ include: [Workshop] });
   }
 
   /* TODO: complete getFutureEventWithWorkshops so that it returns events with workshops, that have not yet started
@@ -155,6 +154,6 @@ export class EventsService {
     ```
      */
   async getFutureEventWithWorkshops() {
-    throw new Error('TODO task 2');
+    throw new Error("TODO task 2");
   }
 }
